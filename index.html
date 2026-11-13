@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en" data-palette="kente">
+<!--
+  temifw — personal site of Temiloluwa Ifedapo Titiloye
+  -----------------------------------------------------
+  One file, no build step, no libraries.
+  • Palette: set data-palette on <html> to "kente" | "amber" | "violet"
+    (or try them live with the switcher in the footer).
+  • Content comes from the CV (no phone number, grades or referees on purpose).
+-->
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>temifw · Temiloluwa Titiloye</title>
+  <meta name="description" content="Temiloluwa Ifedapo Titiloye (temifw): software + AI engineer. Computer Engineering, KNUST '26, Kumasi, Ghana." />
+  <meta name="theme-color" content="#0b0f0e" />
+
+  <!-- Fonts: Bricolage Grotesque (headings + body) · JetBrains Mono (username, labels, metadata) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================
+       1. DESIGN TOKENS — three palettes, one set of names
+       ========================================================== */
+    :root, [data-palette="kente"] {          /* green-black · signal green · kente gold */
+      --bg: #0b0f0e;  --surface: #111715;  --line: #1e2825;
+      --text: #e6ece9; --muted: #8a9893;   /* muted ≥ 6:1 on bg */
+      --accent: #3ddc97; --accent-2: #f2c14e;
+    }
+    [data-palette="amber"] {                 /* warm black · phosphor amber · rust */
+      --bg: #100e0b;  --surface: #17140f;  --line: #29241b;
+      --text: #efe7da; --muted: #9c9182;
+      --accent: #ffb547; --accent-2: #ff7a59;
+    }
+    [data-palette="violet"] {                /* ink black · lavender · aqua */
+      --bg: #0d0c14;  --surface: #13121c;  --line: #23212e;
+      --text: #e9e7f2; --muted: #938fa8;
+      --accent: #b69cff; --accent-2: #5ee7df;
+    }
+    :root {
+      --sans: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+      --gutter: 16px;
+      --max: 760px;
+      color-scheme: dark;
+    }
+
+    /* ==========================================================
+       2. BASE
+       ========================================================== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 17px/1.65 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-underline-offset: 3px; text-decoration-color: var(--line); }
+    a:hover { color: var(--accent); text-decoration-color: currentColor; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    ::selection { background: var(--accent); color: var(--bg); }
+    .skip {
+      position: absolute; left: var(--gutter); top: -48px; z-index: 20;
+      padding: 8px 12px; border-radius: 6px;
+      background: var(--accent); color: var(--bg); font: 500 13px var(--mono); text-decoration: none;
+    }
+    .skip:focus { top: 10px; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+    /* ==========================================================
+       3. HEADER — small sticky bar, links on the right
+       ========================================================== */
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s ease;
+    }
+    .bar.is-scrolled { border-bottom-color: var(--line); }
+    .bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .bar__home { font: 500 14px var(--mono); text-decoration: none; }
+    .bar__home span { color: var(--accent); }
+    .bar nav ul { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+    .bar nav a {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 0 9px;   /* 44px touch target */
+      font: 13px var(--mono); color: var(--muted); text-decoration: none;
+    }
+    .bar nav a:hover, .bar nav a[aria-current="true"] { color: var(--text); }
+    .bar nav a[aria-current="true"] { box-shadow: inset 0 -2px 0 var(--accent); }
+    /* On small phones, keep only the most useful links */
+    @media (max-width: 479px) { .bar nav .wide-only { display: none; } }
+
+    /* ==========================================================
+       4. HERO — "$ temifw" typed, full name big below, summary
+       ========================================================== */
+    .hero { padding: 72px 0 40px; }
+    @media (min-width: 768px) { .hero { padding: 120px 0 56px; } }
+
+    .prompt {
+      margin: 0;
+      font: 500 clamp(22px, 5.5vw, 30px)/1.3 var(--mono);
+      white-space: nowrap;
+      min-height: 1.3em;                 /* reserve the line so nothing jumps */
+    }
+    .prompt__sign { color: var(--accent-2); margin-right: .55ch; }
+    .prompt__user { color: var(--accent); }
+    .cursor {
+      display: inline-block; width: .6ch; height: 1.05em;
+      margin-left: 2px; vertical-align: -0.15em;
+      background: var(--accent);
+      animation: blink 1.05s steps(1) infinite;
+    }
+    .cursor.is-typing { animation: none; }       /* solid while typing */
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero h1 {
+      margin: 10px 0 0;
+      font-size: clamp(38px, 10vw, 68px);
+      font-weight: 800; line-height: 1.02; letter-spacing: -.035em;
+    }
+    /* Name fades up once the username has finished typing (JS adds/removes these) */
+    .js-type .hero h1, .js-type .hero .summary, .js-type .hero .meta {
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+    }
+    .js-type.typed .hero h1 { opacity: 1; transform: none; }
+    .js-type.typed .hero .summary { opacity: 1; transform: none; transition-delay: .15s; }
+    .js-type.typed .hero .meta { opacity: 1; transform: none; transition-delay: .3s; }
+
+    .summary {
+      max-width: 36em; margin: 22px 0 0;
+      font-size: clamp(18px, 3.2vw, 21px); line-height: 1.55; color: var(--muted);
+    }
+    .summary strong { color: var(--text); font-weight: 500; }
+    .meta {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; padding: 0; list-style: none;
+    }
+    .meta li {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px;
+      font: 12px var(--mono); color: var(--muted);
+    }
+    .meta .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+    /* ==========================================================
+       5. SECTIONS — label sits in a left gutter on desktop,
+          above the content on phones
+       ========================================================== */
+    section { padding: 48px 0; border-top: 1px solid var(--line); scroll-margin-top: 64px; }
+    @media (min-width: 768px) {
+      section { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; }
+    }
+    .label {
+      margin: 0 0 20px;
+      font: 500 13px/1.9 var(--mono); color: var(--muted); letter-spacing: .02em;
+    }
+    .label span { color: var(--accent); margin-right: 6px; }
+    @media (min-width: 768px) { .label { position: sticky; top: 80px; align-self: start; margin: 0; } }
+
+    .prose p { margin: 0 0 14px; color: var(--muted); }
+    .prose p:first-child { color: var(--text); font-size: 19px; }
+    .prose strong { color: var(--text); font-weight: 500; }
+
+    /* ---------- Projects: stacked panels with index + arrow ---------- */
+    .projects { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .project {
+      position: relative;
+      padding: 18px 18px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line); border-radius: 12px;
+      transition: border-color .25s ease, transform .25s ease;
+    }
+    /* only cards that link somewhere react to hover */
+    .project:has(a):hover, .project:focus-within {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      transform: translateY(-2px);
+    }
+    .project__top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .project h3 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+    .project h3 a { text-decoration: none; }
+    .project h3 a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }  /* whole card clickable */
+    .project__kind { flex: none; font: 11px var(--mono); color: var(--muted); }
+    .project__arrow { font: 16px var(--mono); color: var(--muted); transition: transform .25s ease, color .25s ease; }
+    .project:hover .project__arrow, .project:focus-within .project__arrow { color: var(--accent); transform: translate(3px, -3px); }
+    .project p { margin: 6px 0 12px; color: var(--muted); font-size: 16px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .tags li {
+      padding: 2px 8px; border-radius: 4px;
+      font: 12px var(--mono); color: var(--accent-2);
+      background: color-mix(in srgb, var(--accent-2) 10%, transparent);
+    }
+    .more { display: inline-block; margin-top: 16px; font: 13px var(--mono); color: var(--muted); }
+
+    /* ---------- Stack: software · where they meet · AI ---------- */
+    .stack { display: grid; gap: 12px; }
+    @media (min-width: 600px) { .stack { grid-template-columns: repeat(3, 1fr); } }
+    .stack div { padding: 16px; border: 1px solid var(--line); border-radius: 12px; }
+    .stack .meet {
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+      background: color-mix(in srgb, var(--accent) 6%, transparent);
+    }
+    .stack h3 { margin: 0 0 8px; font: 500 12px var(--mono); color: var(--muted); text-transform: lowercase; }
+    .stack .meet h3 { color: var(--accent); }
+    .stack ul { margin: 0; padding: 0; list-style: none; }
+    .stack li { padding: 3px 0; font-size: 15px; }
+
+    /* ---------- Experience: vertical timeline ---------- */
+    .timeline { margin: 0; padding: 0; list-style: none; }
+    .role { position: relative; padding: 0 0 28px 26px; }
+    .role::before {                        /* the line */
+      content: ""; position: absolute; left: 5px; top: 10px; bottom: 0; width: 1px; background: var(--line);
+    }
+    .role:last-child { padding-bottom: 0; }
+    .role:last-child::before { display: none; }
+    .role::after {                         /* the node */
+      content: ""; position: absolute; left: 0; top: 7px;
+      width: 11px; height: 11px; border-radius: 50%;
+      border: 2px solid var(--accent); background: var(--bg);
+    }
+    .role.now::after { background: var(--accent); }
+    .role time { font: 12px var(--mono); color: var(--muted); }
+    .role h3 { margin: 2px 0 4px; font-size: 18px; font-weight: 500; }
+    .role h3 span { color: var(--muted); font-weight: 400; }
+    .role p { margin: 0; color: var(--muted); font-size: 16px; }
+
+    /* ---------- Contact ---------- */
+    .contact-line { margin: 0 0 14px; font-size: clamp(22px, 4.5vw, 30px); line-height: 1.25; font-weight: 700; letter-spacing: -.02em; }
+    .contact-mail {
+      font: clamp(15px, 3.6vw, 18px) var(--mono); color: var(--accent);
+      text-decoration: none; word-break: break-all;
+    }
+    .contact-mail:hover { text-decoration: underline; }
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0; padding: 0; list-style: none; }
+    .links a {
+      display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px;
+      border: 1px solid var(--line); border-radius: 8px;
+      font: 13px var(--mono); color: var(--muted); text-decoration: none;
+    }
+    .links a:hover { color: var(--text); border-color: var(--accent); }
+    .links svg { width: 16px; height: 16px; fill: currentColor; }
+
+    footer {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 24px 0 40px; border-top: 1px solid var(--line);
+      font: 12px var(--mono); color: var(--muted);
+    }
+    .palette { display: flex; align-items: center; gap: 8px; }
+    .palette button {
+      width: 24px; height: 24px; padding: 0; border-radius: 50%; cursor: pointer;
+      border: 2px solid var(--line);
+    }
+    .palette button[aria-pressed="true"] { border-color: var(--text); }
+    .palette [data-set="kente"]  { background: linear-gradient(135deg, #3ddc97 50%, #f2c14e 50%); }
+    .palette [data-set="amber"]  { background: linear-gradient(135deg, #ffb547 50%, #ff7a59 50%); }
+    .palette [data-set="violet"] { background: linear-gradient(135deg, #b69cff 50%, #5ee7df 50%); }
+
+    /* ==========================================================
+       6. SCROLL REVEAL (only when JS runs and motion is allowed)
+       ========================================================== */
+    .js-reveal .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
+    .js-reveal .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">skip to content</a>
+
+  <!-- ====================== HEADER ====================== -->
+  <header class="bar" id="bar">
+    <div class="wrap">
+      <a class="bar__home" href="#top" aria-label="temifw, back to top"><span>~/</span>temifw</a>
+      <nav aria-label="Sections">
+        <ul>
+          <li class="wide-only"><a href="#about">about</a></li>
+          <li><a href="#work">work</a></li>
+          <li class="wide-only"><a href="#stack">stack</a></li>
+          <li><a href="#experience">exp</a></li>
+          <li><a href="#contact">contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+
+    <!-- ====================== HERO ====================== -->
+    <div class="hero" id="top">
+      <!--
+        Line 1: "$ temifw", where the username types out letter by letter.
+        Screen readers just hear "temifw" (aria-label); the animated
+        characters are hidden from them so they aren't read one by one.
+      -->
+      <p class="prompt" aria-label="temifw">
+        <span aria-hidden="true"><span class="prompt__sign">$</span><span class="prompt__user" id="username">temifw</span><span class="cursor" id="cursor"></span></span>
+      </p>
+
+      <!-- Line 2: full name, big and bold -->
+      <h1>Temiloluwa Ifedapo Titiloye</h1>
+
+      <!-- Summary -->
+      <p class="summary">
+        Software + AI engineer. I adapt machine learning models to specialised tasks and
+        <strong>build the reliable systems that put them to use</strong>, from fine-tuned LLMs
+        running locally to full-stack apps backed by PostgreSQL.
+      </p>
+
+      <ul class="meta" aria-label="Quick facts">
+        <li><span class="dot" aria-hidden="true"></span>open to opportunities</li>
+        <li>CompE · KNUST '26</li>
+        <li>Kumasi, Ghana</li>
+      </ul>
+    </div>
+
+    <!-- ====================== ABOUT ====================== -->
+    <section id="about" aria-labelledby="about-h">
+      <h2 class="label" id="about-h"><span>01</span>about</h2>
+      <div class="prose reveal">
+        <p>I'm a Computer Engineering graduate from KNUST in Kumasi, Ghana. My work sits where software engineering meets applied AI.</p>
+        <p>On the AI side, I've <strong>fine-tuned Mistral-7B with LoRA</strong> to triage support tickets and run it fully offline, and built a signal-processing classifier that tells appliances apart from a single current reading. On the software side, I build <strong>full-stack React + PostgreSQL platforms</strong> where the database itself guarantees correctness.</p>
+        <p>I'm most interested in applied machine learning, adapting and deploying foundation models efficiently, and the engineering that makes AI systems dependable.</p>
+      </div>
+    </section>
+
+    <!-- ====================== PROJECTS ====================== -->
+    <section id="work" aria-labelledby="work-h">
+      <h2 class="label" id="work-h"><span>02</span>projects</h2>
+      <div>
+        <!--
+          Cards without a link are plain panels. To make one clickable, wrap its
+          title in a link and add the arrow, e.g.:
+            <h3><a href="https://github.com/…">Ticket Triage LLM</a></h3>
+            <span class="project__arrow" aria-hidden="true">↗</span>
+          The link stretches over the whole card automatically.
+        -->
+        <ul class="projects">
+          <li class="project reveal">
+            <div class="project__top">
+              <h3>Helpdesk Ticket Triage LLM</h3>
+              <span class="project__kind">final-year project</span>
+            </div>
+            <p>Fine-tuned Mistral-7B with LoRA to turn a support ticket into structured JSON (category, priority, fix steps). Reached 100% valid JSON and 93.3% priority accuracy on held-out tickets, then shipped as a 4-bit GGUF that runs offline through Ollama.</p>
+            <ul class="tags" aria-label="Built with"><li>Python</li><li>Unsloth</li><li>LoRA</li><li>Ollama</li></ul>
+          </li>
+          <li class="project reveal">
+            <div class="project__top">
+              <h3>Maison Center</h3>
+              <span class="project__kind">hotel booking</span>
+            </div>
+            <p>Customer app and admin portal for a hotel. Double bookings are impossible by design, enforced by a PostgreSQL exclusion constraint and a retrying booking function. Includes a live admin board and email confirmations.</p>
+            <ul class="tags" aria-label="Built with"><li>React</li><li>Express</li><li>Supabase</li><li>PostgreSQL</li></ul>
+          </li>
+          <li class="project reveal">
+            <div class="project__top">
+              <h3>Harmonic Load Disaggregation</h3>
+              <span class="project__kind">signal processing + ML</span>
+            </div>
+            <p>Identifies which appliances are running from a single current signal using filtering, harmonic-ratio features and k-NN (macro-F1 0.98). A voltage-sag gate halved false switching events.</p>
+            <ul class="tags" aria-label="Built with"><li>Python</li><li>DSP</li><li>k-NN</li></ul>
+          </li>
+          <li class="project reveal">
+            <div class="project__top">
+              <h3>Support Hub</h3>
+              <span class="project__kind">built for an employer</span>
+            </div>
+            <p>An admin dashboard that takes over viewer screens (one device, a group, or all of them) to play a chosen support video live, with role-based access and approval for uploads.</p>
+            <ul class="tags" aria-label="Built with"><li>React</li><li>Vite</li><li>Supabase</li></ul>
+          </li>
+          <li class="project reveal">
+            <div class="project__top">
+              <h3>Husky Mobile Robot Control</h3>
+              <span class="project__kind">robotics</span>
+            </div>
+            <p>A proportional controller that drives a simulated Clearpath Husky to a target from laser-scan data, plus EKF localisation on recorded runs. Traced a steering fault to an inverted laser mount.</p>
+            <ul class="tags" aria-label="Built with"><li>ROS Noetic</li><li>Gazebo</li><li>RViz</li></ul>
+          </li>
+        </ul>
+        <a class="more" href="https://github.com/temifw">more on github →</a>
+      </div>
+    </section>
+
+    <!-- ====================== STACK ====================== -->
+    <section id="stack" aria-labelledby="stack-h">
+      <h2 class="label" id="stack-h"><span>03</span>stack</h2>
+      <div class="stack">
+        <div class="reveal">
+          <h3>software</h3>
+          <ul>
+            <li>Python · JavaScript · TypeScript</li>
+            <li>React (Vite) · Node.js · Express</li>
+            <li>Flask · Django · REST APIs</li>
+            <li>PostgreSQL (PL/pgSQL) · Supabase</li>
+            <li>Git · Linux (WSL)</li>
+          </ul>
+        </div>
+        <div class="meet reveal">
+          <h3>where they meet</h3>
+          <ul>
+            <li>LLM fine-tuning (LoRA, Unsloth)</li>
+            <li>GGUF quantization</li>
+            <li>Local deployment with Ollama</li>
+            <li>Dataset building</li>
+            <li>Model evaluation (macro-F1, confusion matrices)</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <h3>ai &amp; signals</h3>
+          <ul>
+            <li>k-NN · feature extraction</li>
+            <li>Digital filtering · MATLAB</li>
+            <li>ROS Noetic · Gazebo · RViz</li>
+            <li>Google Colab · Kaggle</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== EXPERIENCE ====================== -->
+    <section id="experience" aria-labelledby="exp-h">
+      <h2 class="label" id="exp-h"><span>04</span>experience</h2>
+      <!-- Newest first. Add class "now" to a current role to fill in its dot. -->
+      <ol class="timeline">
+        <li class="role reveal">
+          <time>2022 to 2026</time>
+          <h3>BSc Computer Engineering <span>· KNUST</span></h3>
+          <p>Final-year project: a fine-tuned LLM for helpdesk ticket triage. Coursework spanning software engineering, computer architecture, DSP, robotics and microprocessors.</p>
+        </li>
+        <li class="role reveal">
+          <time>2022, 2023, 2025</time>
+          <h3>IT Support Intern <span>· UITS, KNUST</span></h3>
+          <p>Three placements with User Support Services: diagnosed and fixed hardware and software faults for students and staff, rolled out university software, and managed portal credentials and biometric enrolment for new students.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ====================== CONTACT ====================== -->
+    <section id="contact" aria-labelledby="contact-h">
+      <h2 class="label" id="contact-h"><span>05</span>contact</h2>
+      <div class="reveal">
+        <p class="contact-line">Building something where software meets AI? Let's talk.</p>
+        <a class="contact-mail" href="mailto:titiloyetemi404@gmail.com">titiloyetemi404@gmail.com</a>
+        <ul class="links">
+          <li><a href="https://github.com/temifw">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+            github</a></li>
+          <li><a href="https://linkedin.com/in/temiloluwa-titiloye">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15ZM4.94 13.4V6.17H2.54v7.23h2.4ZM3.74 5.18c.84 0 1.36-.55 1.36-1.25-.01-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01Zm4.91 8.22V9.36c0-.21.02-.43.08-.58.17-.43.57-.88 1.23-.88.87 0 1.21.66 1.21 1.63v3.87h2.4V9.25c0-2.22-1.18-3.26-2.77-3.26-1.28 0-1.85.7-2.17 1.2v.02h-.01l.01-.02V6.17H6.24c.03.68 0 7.23 0 7.23h2.41Z"/></svg>
+            linkedin</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>© <span id="year">2026</span> temifw · hand-written HTML, CSS &amp; JS</span>
+      <div class="palette" role="group" aria-label="Color palette">
+        <span>palette</span>
+        <button type="button" data-set="kente"  aria-label="Kente: green and gold"></button>
+        <button type="button" data-set="amber"  aria-label="Amber: amber and rust"></button>
+        <button type="button" data-set="violet" aria-label="Violet: lavender and aqua"></button>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+  /* ============================================================
+     Vanilla JS, four small independent pieces:
+       A. Hero: type the username letter by letter
+       B. Scroll reveal
+       C. Header border + active section highlight
+       D. Palette switcher
+     ============================================================ */
+  (() => {
+    'use strict';
+    const root = document.documentElement;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------------------------------------------------------
+       A. TYPE THE USERNAME
+       Without JS, or with reduced motion, "temifw" is already in
+       the HTML, so the hero shows the final state instantly.
+       --------------------------------------------------------- */
+    const userEl = document.getElementById('username');
+    const cursor = document.getElementById('cursor');
+    const USERNAME = userEl.textContent;           // single source of truth: the HTML
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const humanDelay = () => 60 + Math.random() * 80;   // 60–140ms, slightly uneven like a person
+
+    async function typeUsername() {
+      root.classList.add('js-type');               // hides name + summary until typing ends
+      userEl.textContent = '';
+      await sleep(450);                            // the "$" sits alone for a beat first
+      cursor.classList.add('is-typing');
+      for (const ch of USERNAME) {
+        userEl.textContent += ch;
+        await sleep(humanDelay());
+      }
+      cursor.classList.remove('is-typing');        // cursor keeps blinking after
+      await sleep(180);
+      root.classList.add('typed');                 // full name + summary fade up
+    }
+
+    if (!reduceMotion) typeUsername();
+
+    /* ---------------------------------------------------------
+       B. SCROLL REVEAL
+       --------------------------------------------------------- */
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      root.classList.add('js-reveal');
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }
+      }, { rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = (i % 3) * 70 + 'ms';     // small stagger inside each group
+        io.observe(el);
+      });
+    }
+
+    /* ---------------------------------------------------------
+       C. HEADER: border once scrolled + highlight current section
+       --------------------------------------------------------- */
+    const bar = document.getElementById('bar');
+    const onScroll = () => bar.classList.toggle('is-scrolled', scrollY > 8);
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const navLinks = [...document.querySelectorAll('.bar nav a')];
+    if ('IntersectionObserver' in window) {
+      const spy = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          navLinks.forEach((a) =>
+            a.setAttribute('aria-current', String(a.hash === '#' + e.target.id)));
+        }
+      }, { rootMargin: '-40% 0px -55% 0px' });     // a thin band across the middle of the screen
+      document.querySelectorAll('main section').forEach((s) => spy.observe(s));
+    }
+
+    /* ---------------------------------------------------------
+       D. PALETTE SWITCHER (choice saved if storage is available)
+       --------------------------------------------------------- */
+    const buttons = document.querySelectorAll('.palette button');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    function applyPalette(name) {
+      root.dataset.palette = name;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.set === name)));
+      themeMeta.content = getComputedStyle(root).getPropertyValue('--bg').trim();
+    }
+    let saved = null;
+    try { saved = localStorage.getItem('temifw-palette'); } catch (_) {}
+    applyPalette(saved || root.dataset.palette);
+    buttons.forEach((b) => b.addEventListener('click', () => {
+      applyPalette(b.dataset.set);
+      try { localStorage.setItem('temifw-palette', b.dataset.set); } catch (_) {}
+    }));
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  })();
+  </script>
+</body>
+</html>
