@@ -326,7 +326,7 @@
       <h2 class="label" id="about-h"><span>01</span>about</h2>
       <div class="prose reveal">
         <p>I'm a Computer Engineering graduate from KNUST in Kumasi, Ghana. My work sits where software engineering meets applied AI.</p>
-        <p>On the AI side, I've <strong>fine-tuned Mistral-7B with LoRA</strong> to triage support tickets and run it fully offline, and built a signal-processing classifier that tells appliances apart from a single current reading. On the software side, I build <strong>full-stack React + PostgreSQL platforms</strong> where the database itself guarantees correctness.</p>
+        <p>On the AI side, I've <strong>fine-tuned Mistral-7B with LoRA</strong> to triage support tickets and run it fully offline. On the software side, I build <strong>full-stack React + PostgreSQL platforms</strong> where the database itself guarantees correctness.</p>
         <p>I'm most interested in applied machine learning, adapting and deploying foundation models efficiently, and the engineering that makes AI systems dependable.</p>
       </div>
     </section>
@@ -361,27 +361,11 @@
           </li>
           <li class="project reveal">
             <div class="project__top">
-              <h3>Harmonic Load Disaggregation</h3>
-              <span class="project__kind">signal processing + ML</span>
-            </div>
-            <p>Identifies which appliances are running from a single current signal using filtering, harmonic-ratio features and k-NN (macro-F1 0.98). A voltage-sag gate halved false switching events.</p>
-            <ul class="tags" aria-label="Built with"><li>Python</li><li>DSP</li><li>k-NN</li></ul>
-          </li>
-          <li class="project reveal">
-            <div class="project__top">
               <h3>Support Hub</h3>
               <span class="project__kind">built for an employer</span>
             </div>
             <p>An admin dashboard that takes over viewer screens (one device, a group, or all of them) to play a chosen support video live, with role-based access and approval for uploads.</p>
             <ul class="tags" aria-label="Built with"><li>React</li><li>Vite</li><li>Supabase</li></ul>
-          </li>
-          <li class="project reveal">
-            <div class="project__top">
-              <h3>Husky Mobile Robot Control</h3>
-              <span class="project__kind">robotics</span>
-            </div>
-            <p>A proportional controller that drives a simulated Clearpath Husky to a target from laser-scan data, plus EKF localisation on recorded runs. Traced a steering fault to an inverted laser mount.</p>
-            <ul class="tags" aria-label="Built with"><li>ROS Noetic</li><li>Gazebo</li><li>RViz</li></ul>
           </li>
         </ul>
         <a class="more" href="https://github.com/temifw">more on github →</a>
@@ -405,19 +389,17 @@
         <div class="meet reveal">
           <h3>where they meet</h3>
           <ul>
-            <li>LLM fine-tuning (LoRA, Unsloth)</li>
+            <li>Local LLM deployment with Ollama</li>
             <li>GGUF quantization</li>
-            <li>Local deployment with Ollama</li>
-            <li>Dataset building</li>
-            <li>Model evaluation (macro-F1, confusion matrices)</li>
+            <li>Structured JSON output for apps</li>
           </ul>
         </div>
         <div class="reveal">
-          <h3>ai &amp; signals</h3>
+          <h3>ai</h3>
           <ul>
-            <li>k-NN · feature extraction</li>
-            <li>Digital filtering · MATLAB</li>
-            <li>ROS Noetic · Gazebo · RViz</li>
+            <li>LLM fine-tuning (LoRA, Unsloth)</li>
+            <li>Dataset building</li>
+            <li>Model evaluation (macro-F1, confusion matrices)</li>
             <li>Google Colab · Kaggle</li>
           </ul>
         </div>
@@ -432,7 +414,7 @@
         <li class="role reveal">
           <time>2022 to 2026</time>
           <h3>BSc Computer Engineering <span>· KNUST</span></h3>
-          <p>Final-year project: a fine-tuned LLM for helpdesk ticket triage. Coursework spanning software engineering, computer architecture, DSP, robotics and microprocessors.</p>
+          <p>Final-year project: a fine-tuned LLM for helpdesk ticket triage.</p>
         </li>
         <li class="role reveal">
           <time>2022, 2023, 2025</time>
